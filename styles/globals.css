@@ -17,8 +17,7 @@ a {
   box-sizing: border-box;
 }
 
-
-button{
+button {
   padding: 10px;
   padding-left: 50px;
   padding-right: 50px;
@@ -27,6 +26,8 @@ button{
   background-color: black;
   color: white;
   border: none;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .data-titles {
@@ -35,14 +36,12 @@ button{
   background-color: white;
 }
 
-.data-content{
+.data-content {
   padding: 10px;
 }
 
-.see-more-container{
+.see-more-container {
   display: "flex";
   justify-content: "center";
   align-items: "center";
 }
-
-
