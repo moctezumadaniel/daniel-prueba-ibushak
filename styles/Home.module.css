@@ -1,5 +1,6 @@
 .container {
-  padding: 0 2rem;
+  background-color: white;
+  color: black;
 }
 
 .main {
@@ -11,6 +12,8 @@
   justify-content: center;
   align-items: center;
 }
+
+
 
 .footer {
   display: flex;
@@ -31,6 +34,11 @@
 .title a {
   color: #0070f3;
   text-decoration: none;
+}
+
+.loading-items{
+  display: flex;
+  font-size: 1.2rem;
 }
 
 .title a:hover,
