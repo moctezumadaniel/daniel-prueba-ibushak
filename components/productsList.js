@@ -3,7 +3,7 @@ import {
   MercadoLibrePhonesSearch,
   MercadoLibreUserSearch,
 } from "../constants/baseApis";
-import { formatAddress, getPriceRange } from "../helpers/transformData";
+import { formatAddress, getBrand, getPriceRange } from "../helpers/transformData";
 import styles from "../styles/Home.module.css";
 export const ProductsList = () => {
   const [results, setResults] = useState([]);
@@ -28,7 +28,6 @@ export const ProductsList = () => {
         }
       }
     }
-
     return itemsArr;
   };
   const readNextItems = async () => {
@@ -85,6 +84,9 @@ export const ProductsList = () => {
                 <b>Seller Name</b>
               </th>
               <th className="data-content">
+                <b>Marca</b>
+              </th>
+              <th className="data-content">
                 <b>Envío Gratis</b>
               </th>
               <th className="data-content">
@@ -111,6 +113,7 @@ export const ProductsList = () => {
                         {item.seller?.id || "--"}
                       </td>
                       <td className="data-content">{item.nickname}</td>
+                      <td className="data-content">{getBrand(item.attributes)}</td>
                       <td className="data-content">
                         {item.shipping?.free_shipping ? "True" : "False"}
                       </td>
