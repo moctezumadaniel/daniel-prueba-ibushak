@@ -1,55 +1,72 @@
 import { useEffect, useState } from "react";
-import { MercadoLibrePhonesSearch, MercadoLibreUserSearch } from "../constants/baseApis";
+import {
+  MercadoLibrePhonesSearch,
+  MercadoLibreUserSearch,
+} from "../constants/baseApis";
 import { formatAddress, getPriceRange } from "../helpers/transformData";
 import styles from "../styles/Home.module.css";
 export const ProductsList = () => {
   const [results, setResults] = useState([]);
   const [paging, setPaging] = useState({});
   const [isFetching, setIsFetching] = useState(false);
-  const users = {}  
+  const users = {};
 
   const searchNicknames = async (itemsArr) => {
-    for(let i = 0; i < itemsArr.length; i++){
-      if(users[itemsArr[i].seller.id]){
-        itemsArr[i].nickname = parsedJson.nickname
-      }else{
-        const res = await fetch(`${MercadoLibreUserSearch}/${itemsArr[i].seller.id}`)
-        const parsedJson = await res.json()
-      
-        itemsArr[i].nickname = parsedJson.nickname
+    for (let i = 0; i < itemsArr.length; i++) {
+      if (users[itemsArr[i].seller.id]) {
+        itemsArr[i].nickname = parsedJson.nickname;
+      } else {
+        try {
+          const res = await fetch(
+            `${MercadoLibreUserSearch}/${itemsArr[i].seller.id}`
+          );
+          const parsedJson = await res.json();
+          itemsArr[i].nickname = parsedJson.nickname;
+        } catch (err) {
+          console.error(err);
+          itemsArr = [];
+        }
       }
-      
     }
-   
-    return itemsArr
-  }
+
+    return itemsArr;
+  };
   const readNextItems = async () => {
     setIsFetching(true);
     const offset = paging.offset + paging.limit;
-    const res = await fetch(
-      `${MercadoLibrePhonesSearch}&sort=price_asc&offset=${offset}&limit=50`
-    );
-    const parsedJson = await res.json();
-    const fetchedResults = parsedJson.results;
-
-    const newResults = [...results];
-    const fetchedResultsWithNames = await searchNicknames(fetchedResults)
-    newResults.push(...fetchedResultsWithNames);
-    setResults(newResults);
-    setPaging(parsedJson.paging);
-    setIsFetching(false);
+    try {
+      const res = await fetch(
+        `${MercadoLibrePhonesSearch}&sort=price_asc&offset=${offset}&limit=50`
+      );
+      const parsedJson = await res.json();
+      const fetchedResults = parsedJson.results;
+      const newResults = [...results];
+      const fetchedResultsWithNames = await searchNicknames(fetchedResults);
+      newResults.push(...fetchedResultsWithNames);
+      setResults(newResults);
+      setPaging(parsedJson.paging);
+      setIsFetching(false);
+    } catch (err) {
+      console.error(err);
+      setIsFetching(false);
+    }
   };
 
   const readInitialItems = async () => {
     setIsFetching(true);
-    const res = await fetch(
-      `${MercadoLibrePhonesSearch}&sort=price_asc&offset=0&limit=50`
-    );
-    const parsedJson = await res.json();
-    const resultsWithName = await searchNicknames(parsedJson.results)
-    setResults(resultsWithName);
-    setPaging(parsedJson.paging);
-    setIsFetching(false);
+    try {
+      const res = await fetch(
+        `${MercadoLibrePhonesSearch}&sort=price_asc&offset=0&limit=50`
+      );
+      const parsedJson = await res.json();
+      const resultsWithName = await searchNicknames(parsedJson.results);
+      setResults(resultsWithName);
+      setPaging(parsedJson.paging);
+      setIsFetching(false);
+    } catch (err) {
+      console.err(err);
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
@@ -108,7 +125,9 @@ export const ProductsList = () => {
                       </td>
 
                       <td className="data-content">
-                        {item?.prices?.prices ? getPriceRange(item?.prices.prices) : item?.prices?.price }
+                        {item?.prices?.prices
+                          ? getPriceRange(item?.prices.prices)
+                          : item?.prices?.price}
                       </td>
                     </tr>
                   );
